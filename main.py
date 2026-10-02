@@ -18,44 +18,93 @@ MESES = [
 ESTILO_IOS = """
 <style>
 :root {
-  --ios-bg: #F2F2F7;
-  --ios-card: #FFFFFF;
-  --ios-text: #1C1C1E;
-  --ios-muted: #8E8E93;
-  --ios-sep: rgba(60,60,67,0.12);
-  --ios-blue: #007AFF;
+  --bg: #FFFFFF;
+  --tile: #FFFFFF;
+  --tile-top: #FFFFFF;
+  --tile-bottom: #F4F6F9;
+  --text: #1D1D1F;
+  --muted: #6E6E73;
+  --sep: rgba(0,0,0,0.08);
+  --hover: rgba(0,0,0,0.028);
+  --verde: #18794E;
+  --rojo: #C01230;
+  --azul: #0062CC;
+  --gris: #55555C;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ios-bg: #000000;
-    --ios-card: #1C1C1E;
-    --ios-text: #FFFFFF;
-    --ios-muted: #98989F;
-    --ios-sep: rgba(84,84,88,0.5);
-  }
-}
-body, .q-page, .nicegui-content {
-  background: var(--ios-bg) !important;
+html, body, .q-page, .nicegui-content, .q-layout, .q-page-container {
+  background: var(--bg) !important;
+  color: var(--text) !important;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
                "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
-  color: var(--ios-text);
+  -webkit-font-smoothing: antialiased;
 }
-.ios-card {
-  background: var(--ios-card);
+.tile {
+  position: relative;
+  background: linear-gradient(180deg, var(--tile-top) 0%, var(--tile-bottom) 100%);
+  border: 1px solid var(--sep);
   border-radius: 18px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  padding: 18px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px rgba(16,24,40,0.06);
+  overflow: hidden;
 }
-.ios-stat-num { font-size: 1.7rem; font-weight: 700; letter-spacing: -0.02em; }
-.ios-stat-lbl { font-size: 0.8rem; color: var(--ios-muted); font-weight: 500; }
-.ios-title { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; color: var(--ios-text); }
-.ios-sub { font-size: 0.95rem; color: var(--ios-muted); }
-.q-btn { border-radius: 980px !important; text-transform: none !important; font-weight: 600; }
-.ios-table { background: var(--ios-card) !important; border-radius: 18px; }
-.ios-table thead th { color: var(--ios-muted); font-weight: 600; font-size: 0.8rem; }
-.ios-table td, .ios-table th { border-color: var(--ios-sep) !important; }
-.ios-dialog { border-radius: 22px !important; }
+.tile::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 46%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 100%);
+  pointer-events: none;
+}
+.mosaico {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  width: 100%;
+}
+.stat-lbl {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.stat-num {
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  line-height: 1.25;
+  color: var(--text);
+}
+.stat-cur { font-size: 0.75rem; font-weight: 600; color: var(--muted); margin-left: 5px; }
+.titulo { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; color: var(--text); }
+.subtitulo { font-size: 0.95rem; color: var(--muted); }
+.c-verde { color: var(--verde) !important; }
+.c-rojo  { color: var(--rojo) !important; }
+.c-azul  { color: var(--azul) !important; }
+.c-gris  { color: var(--gris) !important; }
+.q-btn { border-radius: 980px !important; text-transform: none !important; font-weight: 600; letter-spacing: 0; }
+.tabla-tile {
+  border: 1px solid var(--sep);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(16,24,40,0.05), 0 10px 24px rgba(16,24,40,0.06);
+}
+.tabla-tile, .tabla-tile .q-table__container, .tabla-tile table,
+.tabla-tile thead tr, .tabla-tile .q-table__middle {
+  background: #FFFFFF !important;
+}
+.tabla-tile thead th {
+  color: var(--muted) !important;
+  font-weight: 600;
+  font-size: 0.8rem;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F4F6F9 100%) !important;
+}
+.tabla-tile tbody td { color: var(--text) !important; font-size: 0.95rem; }
+.tabla-tile tbody tr:hover { background: var(--hover) !important; }
+.tabla-tile td, .tabla-tile th { border-color: var(--sep) !important; }
+.dialogo { border-radius: 22px !important; background: #FFFFFF !important; color: var(--text) !important; }
 .q-field--outlined .q-field__control { border-radius: 12px; }
+.q-field__native, .q-field__label, .q-item__label { color: var(--text) !important; }
 </style>
 """
 
@@ -66,6 +115,10 @@ def tiene_webview():
 
 def dias_en_mes(mes, anio):
     return calendar.monthrange(anio, mes)[1]
+
+
+def fmt_monto(valor):
+    return f"${abs(valor):,.2f}"
 
 
 def fmt_dinero(valor):
@@ -93,28 +146,32 @@ estado = Estado()
 def pagina_principal():
     db.init_db()
     ui.add_head_html(ESTILO_IOS)
-    ui.colors(primary="#007AFF", positive="#34C759", negative="#FF3B30", warning="#FF9500")
+    ui.dark_mode(False)
+    ui.colors(primary="#0062CC", positive="#18794E", negative="#C01230", warning="#9A5B00")
 
-    with ui.column().classes("w-full max-w-3xl mx-auto q-pa-md gap-4"):
+    with ui.column().classes("w-full max-w-4xl mx-auto q-pa-md gap-4"):
         with ui.row().classes("w-full items-center justify-between"):
             with ui.column().classes("gap-0"):
-                ui.label("Me-Paga").classes("ios-title")
-                etiqueta_titular = ui.label().classes("ios-sub")
+                ui.label("Me-Paga").classes("titulo")
+                etiqueta_titular = ui.label().classes("subtitulo")
             ui.button(icon="settings", on_click=lambda: abrir_configuracion()).props(
                 "flat round color=primary"
             )
 
         tarjetas = {}
-        with ui.row().classes("w-full gap-3 no-wrap"):
-            for clave, titulo, color in [
-                ("total", "Total abonado", "#34C759"),
-                ("saldo", "Saldo pendiente", "#FF3B30"),
-                ("deuda", "Deuda inicial", "#007AFF"),
-                ("cuenta", "Abonos", "#8E8E93"),
+        with ui.element("div").classes("mosaico"):
+            for clave, titulo in [
+                ("total", "Total abonado"),
+                ("saldo", "Saldo pendiente"),
+                ("deuda", "Deuda inicial"),
+                ("cuenta", "Abonos"),
             ]:
-                with ui.column().classes("ios-card flex-1 gap-1 items-start"):
-                    ui.label(titulo).classes("ios-stat-lbl")
-                    tarjetas[clave] = ui.label("-").classes("ios-stat-num").style(f"color:{color}")
+                with ui.column().classes("tile gap-1 items-start"):
+                    etiqueta = ui.label(titulo).classes("stat-lbl")
+                    with ui.row().classes("items-baseline gap-0 no-wrap"):
+                        valor = ui.label("-").classes("stat-num")
+                        unidad = ui.label("").classes("stat-cur")
+                    tarjetas[clave] = (etiqueta, valor, unidad)
 
         tabla = ui.table(
             columns=[
@@ -126,7 +183,7 @@ def pagina_principal():
             ],
             rows=[],
             row_key="id",
-        ).props("flat").classes("ios-table w-full")
+        ).props("flat").classes("tabla-tile w-full")
 
         tabla.add_slot(
             "body-cell-acciones",
@@ -143,7 +200,7 @@ def pagina_principal():
         tabla.add_slot(
             "no-data",
             r"""
-            <div class="full-width row flex-center q-pa-lg text-grey-6">
+            <div class="full-width row flex-center q-pa-lg" style="color:#6E6E73">
                 Aun no hay abonos registrados
             </div>
             """,
@@ -177,22 +234,44 @@ def pagina_principal():
             )
         tabla.rows = filas
         tabla.update()
-        tarjetas["total"].set_text(fmt_dinero(db.total_abonado()))
-        tarjetas["saldo"].set_text(fmt_dinero(db.saldo_pendiente()))
-        tarjetas["deuda"].set_text(fmt_dinero(db.get_deuda_inicial()))
-        tarjetas["cuenta"].set_text(str(db.contar_abonos()))
+
+        moneda = db.get_config("moneda", "MXN")
+        total = db.total_abonado()
+        deuda = db.get_deuda_inicial()
+        saldo = db.saldo_pendiente()
+
+        def pintar(clave, titulo, texto, unidad, clase):
+            etiqueta, valor, sufijo = tarjetas[clave]
+            etiqueta.set_text(titulo)
+            valor.set_text(texto)
+            valor.classes(replace=f"stat-num {clase}")
+            sufijo.set_text(unidad)
+
+        pintar("total", "Total abonado", fmt_monto(total), moneda, "c-verde")
+        pintar("deuda", "Deuda inicial", fmt_monto(deuda), moneda, "c-azul")
+
+        if deuda <= 0:
+            pintar("saldo", "Sin deuda registrada", fmt_monto(0), moneda, "c-gris")
+        elif saldo > 0:
+            pintar("saldo", "Saldo pendiente", fmt_monto(saldo), moneda, "c-rojo")
+        elif saldo == 0:
+            pintar("saldo", "Deuda liquidada", fmt_monto(0), moneda, "c-verde")
+        else:
+            pintar("saldo", "Pago de mas", fmt_monto(saldo), moneda, "c-verde")
+
+        pintar("cuenta", "Abonos", str(db.contar_abonos()), "", "c-gris")
         etiqueta_titular.set_text(f"Pagos de {db.get_config('titular', 'Tia')}")
 
     def abrir_dialogo(abono=None):
         estado.editando = abono["id"] if abono else None
-        with ui.dialog() as dialogo, ui.card().classes("ios-dialog w-96 gap-2"):
+        with ui.dialog() as dialogo, ui.card().classes("dialogo w-96 gap-2"):
             ui.label("Editar abono" if abono else "Nuevo abono").classes("text-lg font-bold")
 
             hoy = date.today()
             base = date.fromisoformat(abono["fecha"]) if abono else hoy
             anios = list(range(2015, hoy.year + 2))
 
-            ui.label("Fecha").classes("ios-stat-lbl")
+            ui.label("Fecha").classes("stat-lbl")
             with ui.row().classes("w-full gap-2 no-wrap"):
                 f_mes = ui.select(
                     {i + 1: m for i, m in enumerate(MESES)},
@@ -250,10 +329,10 @@ def pagina_principal():
         dialogo.open()
 
     def confirmar_borrado(abono):
-        with ui.dialog() as dialogo, ui.card().classes("ios-dialog gap-2"):
+        with ui.dialog() as dialogo, ui.card().classes("dialogo gap-2"):
             ui.label("Eliminar abono").classes("text-lg font-bold")
             ui.label(f"{fmt_dinero(abono['monto'])} del {fmt_fecha_larga(abono['fecha'])}").classes(
-                "ios-sub"
+                "subtitulo"
             )
             with ui.row().classes("w-full justify-end gap-2"):
                 ui.button("Cancelar", on_click=dialogo.close).props("flat color=primary")
@@ -268,7 +347,7 @@ def pagina_principal():
         dialogo.open()
 
     def abrir_configuracion():
-        with ui.dialog() as dialogo, ui.card().classes("ios-dialog w-96 gap-2"):
+        with ui.dialog() as dialogo, ui.card().classes("dialogo w-96 gap-2"):
             ui.label("Configuracion").classes("text-lg font-bold")
             c_titular = ui.input("Titular", value=db.get_config("titular", "Tia")).props(
                 "outlined"
@@ -324,7 +403,7 @@ def iniciar():
         title="Me-Paga",
         reload=False,
         port=int(os.environ.get("ME_PAGA_PORT", "8777")),
-        window_size=(1000, 720) if nativo else None,
+        window_size=(1040, 740) if nativo else None,
         storage_secret="me-paga-local",
     )
 
