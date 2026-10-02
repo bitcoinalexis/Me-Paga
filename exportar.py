@@ -139,3 +139,34 @@ def exportar_excel(ruta, abonos=None, titular=None, deuda_inicial=None, moneda=N
 
     wb.save(ruta)
     return ruta
+
+
+def exportar_csv(ruta, abonos=None, titular=None, deuda_inicial=None, moneda=None):
+    import csv
+
+    if abonos is None:
+        abonos = db.list_abonos()
+    if titular is None:
+        titular = db.get_config("titular", "Tia")
+    if deuda_inicial is None:
+        deuda_inicial = db.get_deuda_inicial()
+    if moneda is None:
+        moneda = db.get_config("moneda", "MXN")
+
+    total = round(sum(float(a["monto"]) for a in abonos), 2)
+    saldo = round(float(deuda_inicial) - total, 2)
+
+    with open(ruta, "w", newline="", encoding="utf-8-sig") as f:
+        w = csv.writer(f)
+        w.writerow([f"Registro de pagos - {titular}"])
+        w.writerow([f"Moneda: {moneda}"])
+        w.writerow([])
+        w.writerow(["#", "Fecha", "Metodo", "Nota", "Abono"])
+        for i, a in enumerate(abonos, start=1):
+            w.writerow([i, a["fecha"], a.get("metodo", ""), a.get("nota", ""), f"{float(a['monto']):.2f}"])
+        w.writerow([])
+        w.writerow(["", "", "", "Total abonado", f"{total:.2f}"])
+        w.writerow(["", "", "", "Numero de abonos", len(abonos)])
+        w.writerow(["", "", "", "Deuda inicial", f"{float(deuda_inicial):.2f}"])
+        w.writerow(["", "", "", "Saldo pendiente", f"{saldo:.2f}"])
+    return ruta
