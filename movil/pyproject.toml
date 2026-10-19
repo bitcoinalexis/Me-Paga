@@ -1,0 +1,24 @@
+[project]
+name = "me-paga"
+version = "1.0.0"
+description = "Registro de abonos con exportacion a Excel y CSV"
+requires-python = ">=3.11"
+dependencies = [
+  "flet==1.0.4",
+  "openpyxl>=3.1",
+]
+
+[tool.flet]
+org = "com.bitcoinalexis"
+product = "Me-Paga"
+company = "bitcoinalexis"
+copyright = "Copyright (c) 2026 bitcoinalexis"
+
+[tool.flet.app]
+path = "."
+
+[tool.flet.android]
+package = "com.bitcoinalexis.mepaga"
+
+[tool.flet.android.permission]
+"android.permission.INTERNET" = false
